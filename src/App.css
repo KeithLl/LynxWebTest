@@ -1,9 +1,9 @@
-:root {
+:root{
   background-color: #000;
   --color-text: #fff;
 }
 
-.Background {
+.Background{
   position: fixed;
   background: radial-gradient(
     71.43% 62.3% at 46.43% 36.43%,
@@ -20,7 +20,7 @@
   transform: rotate(15.25deg);
 }
 
-.App {
+.App{
   position: relative;
   min-height: 100vh;
   display: flex;
@@ -29,11 +29,11 @@
   justify-content: center;
 }
 
-text {
+text{
   color: var(--color-text);
 }
 
-.Banner {
+.Banner{
   flex: 5;
   display: flex;
   flex-direction: column;
@@ -42,77 +42,89 @@ text {
   z-index: 100;
 }
 
-.Logo {
+.Logo{
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
 }
 
-.Logo--react {
+.Logo--react{
   width: 100px;
   height: 100px;
   animation: Logo--spin infinite 20s linear;
 }
 
-.Logo--lynx {
+.Logo--lynx{
   width: 100px;
   height: 100px;
   animation: Logo--shake infinite 0.5s ease;
 }
 
-@keyframes Logo--spin {
-  from {
+@keyframes Logo--spin{
+  from{
     transform: rotate(0deg);
   }
-  to {
+  to{
     transform: rotate(360deg);
   }
 }
 
-@keyframes Logo--shake {
-  0% {
+@keyframes Logo--shake{
+  0%{
     transform: scale(1);
   }
-  50% {
+  50%{
     transform: scale(0.9);
   }
-  100% {
+  100%{
     transform: scale(1);
   }
 }
 
-.Content {
+.Content{
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 }
 
-.Arrow {
+.Arrow{
   width: 24px;
   height: 24px;
 }
 
-.Title {
+.Title{
   font-size: 36px;
   font-weight: 700;
 }
 
-.Subtitle {
+.myInput{
+  margin: 10px;
+  font-size: 18px;
+  height: 30px;
+  color: white;
+  width: 200px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border: lightcyan 1px solid;
+  border-radius: 20px;
+  padding: 0 12px;
+}
+
+.Subtitle{
   font-style: italic;
   font-size: 22px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 
-.Description {
+.Description{
   font-size: 20px;
   color: rgba(255, 255, 255, 0.85);
   margin: 15rpx;
 }
 
-.Hint {
+.Hint{
   font-size: 12px;
   margin: 5px;
   color: rgba(255, 255, 255, 0.65);
