@@ -97,19 +97,31 @@ text{
 .Title{
   font-size: 36px;
   font-weight: 700;
+  color: gold;
 }
 
-.myInput{
+.inputContainer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  border-radius: 30px;
+  height: 50px;
+  width: 100%;
   margin: 10px;
-  font-size: 18px;
-  height: 30px;
-  color: white;
-  width: 200px;
-  background-color: rgba(255, 255, 255, 0.1);
-  border: lightcyan 1px solid;
-  border-radius: 20px;
-  padding: 0 12px;
+  background-color: white;
+
+  .myInput{
+    font-size: 36px;
+    height: 100%;
+    color: yellow;
+    width: 200px;
+    border: blueviolet 1px solid;
+    border-radius: 20px;
+    padding: 0 12px;
+  }
 }
+
 
 .Subtitle{
   font-style: italic;
