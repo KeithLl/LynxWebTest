@@ -2,97 +2,115 @@ import {
   runOnBackground,
   useCallback,
   useEffect,
+  useInitData,
   useLynxGlobalEventListener,
   useMainThreadRef,
+  useRef,
   useState
 } from "@lynx-js/react";
 
 import "./App.css";
-import arrow from "./assets/arrow.png";
-import lynxLogo from "./assets/lynx-logo.png";
-import reactLynxLogo from "./assets/react-logo.png";
-import { MainThread } from "@lynx-js/types";
+import medalHeadBg from "@/assets/all_medal_head_bg.png";
+import medalHeadIconBg from "@/assets/all_medal_head_icon_bg.png";
+import {
+  type ListScrollEvent,
+  MainThread,
+  type NodesRef
+} from "@lynx-js/types";
+import ItemView from "@/component/ItemView.js";
+import AppConsts from "@/const/AppConsts.js";
 
 export function App() {
-  const [alterLogo, setAlterLogo] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [data, setData] = useState(String);
-  const logoRef = useMainThreadRef<MainThread.Element>();
+
+  const initData = useInitData();
+  console.log("initAppData", initData, initData.pageName);
+
+  const [headerIcon, setHeaderIcon] = useState("");
+  const [scrollTop, setScrollTop] = useState(0);
+
+  const listRef = useRef<NodesRef>(null);
 
   useEffect(() => {
     console.info("Hello, ReactLynx");
+
+    // 自动滚动
+    // listRef.current?.invoke({
+    //   method: "autoScroll",
+    //   params: {
+    //     rate: 60,
+    //     start: true
+    //   }
+    // }).exec();
+
   }, []);
-
-  const handleTap = () => {
-    console.log("handle bind tap 112233");
-    // "main thread";
-    // runOnBackground(setAlterLogo)(!alterLogo);
-  };
-
-  const onTap = useCallback(() => {
-    "main thread";
-    runOnBackground(setAlterLogo)(!alterLogo);
-  }, [alterLogo]);
-
-  useLynxGlobalEventListener("testEvent", (data) => {
-    console.log("testEvent : " + data);
-    setAlterLogo(!alterLogo);
-  });
-
-  // 接收input回调
-  useLynxGlobalEventListener("myLynxInput", (data) => {
-    console.log("myLynxInput : " + data);
-  });
-
-  const handleInput = (e) => {
-    const currentValue = e.detail.value.trim();
-    setInputValue(currentValue);
-    console.log("setInputValue : " + inputValue);
-  };
 
   return (
     <view>
-      <view className="Background"/>
       <view className="App">
-        <view className="Banner">
-          <view className="Logo" main-thread:bindtap={onTap}
-                main-thread:ref={logoRef}>
-            {alterLogo
-              ? <image src={reactLynxLogo} className="Logo--react"/>
-              : <image src={lynxLogo} className="Logo--lynx"/>}
-          </view>
-          {alterLogo ? <text className="Title">Test Msg</text> :
-            <text className="Title">MsgHaha1</text>}
-          <view className={"inputContainer"}>
-
-            <input className="myInput" placeholder={"test"}
-                   style={{
-                     color: "red",
-                     backgroundColor: "lightgray",
-                     fontSize: "40px"
-                   }}
-              // style={{ color: "red" }}
-              // style={{ backgroundColor: "yellow" }}
-                   bindinput={(e) => {
-                     console.log("input : " + e.detail.value);
-                   }}/>
-
-            {/*<hhinput className="myInput" bindinput={handleInput}*/}
-            {/*       value={inputValue}/>;*/}
-          </view>
-          <text className="Title" bindtap={handleTap}>Lynx Game</text>
-          <text className="Subtitle">on Lynx</text>
-        </view>
         <view className="Content">
-          <image src={arrow} className="Arrow"/>
-          <text className="Description">Tap the logo and have fun!</text>
-          <text className="Hint">
-            Edit
-            <text style={{ fontStyle: "italic" }}>{" src/App.tsx "}</text>
-            to see updates!
-          </text>
+          <view className="header">
+            <image src={medalHeadBg} className="headerBg"/>
+            <image src={medalHeadIconBg} className="headerIconBg"/>
+            <image src={headerIcon} className="headerIcon"/>
+            <text className="headerText">
+              快去点亮勋章吧
+            </text>
+          </view>
+          <view className="titleContainer">
+            <text className="title">全部勋章</text>
+            <text className="titleFlag">(</text>
+            <text className="titleProgress">0</text>
+            <text className="titleFlag">/</text>
+            <text className="titleTotal">6</text>
+            <text className="titleFlag">)</text>
+          </view>
+          {/*<ItemView*/}
+          {/*  index={0}*/}
+          {/*  url={AppConsts.picUrl}*/}
+          {/*  name="全部"*/}
+          {/*></ItemView>*/}
+          <list
+            ref={listRef}
+            className="list"
+            span-count={3}
+            list-type="flow"
+            scroll-orientation="vertical"
+            // bindscrolltoupper={() => {
+            //   // 滚动到顶部
+            //   console.log("scrolltoupper 111");
+            //   NativeModules.NativeScrollHelperModule.setCanRefresh(true);
+            // }}
+            // bindscrolltolower={() => {
+            //   // 滚动到底部
+            //   console.log("scrolltolower 222");
+            // }}
+            bindscroll={(e: ListScrollEvent) => {
+              let currentScroll = e.detail.scrollTop;
+              if (scrollTop > 0 && currentScroll == 0) {
+                console.log("scrolltolower 31 can refresh", e.detail.scrollTop);
+                NativeModules.NativeScrollHelperModule.setCanRefresh(initData.pageName, true);
+              } else if (scrollTop == 0 && currentScroll > 0) {
+                console.log("scrolltoupper 32 can not refresh ", e.detail.scrollTop);
+                NativeModules.NativeScrollHelperModule.setCanRefresh(initData.pageName, false);
+              }
+              setScrollTop(e.detail.scrollTop);
+            }}
+          >
+            {Array.from({ length: 50 }).map((item, index) => {
+              return (
+                <list-item
+                  item-key={`list-item-${index}`}
+                  key={`list-item-${index}`}
+                >
+                  <ItemView index={index}
+                            url={AppConsts.picUrl}
+                            name={"全部" + index}
+                  />
+                </list-item>
+              );
+            })}
+          </list>
         </view>
-        <view style={{ flex: 1 }}></view>
       </view>
     </view>
   );

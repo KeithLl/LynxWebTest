@@ -1,0 +1,42 @@
+.AppContainer {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+.RedEnvelopeWrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 200px;
+  height: 200px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.Coin {
+  position: absolute;
+  background: yellow;
+  border-radius: 50%;
+  transition: none; /* 禁用过渡效果，让动画更流畅 */
+  animation: coin-animation 0.5s ease-out forwards;
+}
+
+/* 更加生动的动画效果 */
+@keyframes coin-animation {
+  0% {
+    opacity: 0;
+    transform: scale(0.3) rotate(-45deg);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.1) rotate(10deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
