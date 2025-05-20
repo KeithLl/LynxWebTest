@@ -17,8 +17,12 @@ import {
   MainThread,
   type NodesRef
 } from "@lynx-js/types";
-import ItemView from "@/component/ItemView.js";
-import AppConsts from "@/const/AppConsts.js";
+import MedalItemView from "@/component/medal_item/MedalItemView.js";
+import FetchUtils from "@/api/FetchUtils.js";
+import {
+  Medal,
+  type MedalResponse
+} from "@/beans/Medal.js";
 
 export function App() {
 
@@ -26,7 +30,11 @@ export function App() {
   console.log("initAppData", initData, initData.pageName);
 
   const [headerIcon, setHeaderIcon] = useState("");
-  const [scrollTop, setScrollTop] = useState(0);
+  const [scrollTop, setScrollTop] = useState(0);// 滚动距离
+
+  const [isFetching, setFetching] = useState(true);
+  const [medalList, setMedalList] = useState([]);
+  const [medalResult, setMedalResult] = useState<MedalResponse>(null);
 
   const listRef = useRef<NodesRef>(null);
 
@@ -42,7 +50,26 @@ export function App() {
     //   }
     // }).exec();
 
+    getPageData();
+
   }, []);
+
+  const getPageData = async () => {
+    try {
+      const resposeData = await FetchUtils.post(initData.url, initData.params);
+      console.log("resposeData", resposeData, resposeData.data);
+      setMedalResult(resposeData.data);
+      setMedalList(resposeData.data.medalList);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    } finally {
+      setFetching(false);
+    }
+  };
+
+  const onItemTap = (medalItem: Medal) => {
+    console.log("onItemTap", medalItem);
+  };
 
   return (
     <view>
@@ -64,11 +91,11 @@ export function App() {
             <text className="titleTotal">6</text>
             <text className="titleFlag">)</text>
           </view>
-          {/*<ItemView*/}
+          {/*<MedalItemView*/}
           {/*  index={0}*/}
           {/*  url={AppConsts.picUrl}*/}
           {/*  name="全部"*/}
-          {/*></ItemView>*/}
+          {/*></MedalItemView>*/}
           <list
             ref={listRef}
             className="list"
@@ -96,15 +123,13 @@ export function App() {
               setScrollTop(e.detail.scrollTop);
             }}
           >
-            {Array.from({ length: 50 }).map((item, index) => {
+            {medalList.map((item, index) => {
               return (
                 <list-item
                   item-key={`list-item-${index}`}
                   key={`list-item-${index}`}
                 >
-                  <ItemView index={index}
-                            url={AppConsts.picUrl}
-                            name={"全部" + index}
+                  <MedalItemView medalItem={item} handleItemClick={onItemTap}
                   />
                 </list-item>
               );

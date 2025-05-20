@@ -1,12 +1,10 @@
-import "./ItemView.css";
+import "./ItemIcon.css";
 
 export default function ItemIcon(props: {
   url: string,
 }) {
 
   const { url } = props;
-
-  console.log(url);
 
   return (
     <view className={"item-icon"}>
