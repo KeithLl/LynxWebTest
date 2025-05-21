@@ -14,7 +14,7 @@ export default function MedalItemView(props: {
       handleItemClick(medalItem);
     }}>
       <ItemIcon
-        url={medalItem.activeIcon}></ItemIcon>
+        url={!medalItem.isGranted ? medalItem.icon : medalItem.activeIcon}></ItemIcon>
       <text className={"item-text"}>
         {medalItem.name}
       </text>

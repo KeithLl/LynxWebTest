@@ -1,10 +1,8 @@
 import "./redApp.css";
 import {
   useEffect,
-  useRef,
   useState
 } from "@lynx-js/react";
-import type { NodesRef } from "@lynx-js/types";
 
 export function App() {
   const [storedValue, setStoredValue] = useState<string | null>(null);
@@ -12,7 +10,7 @@ export function App() {
   const setStorage = () => {
     NativeModules.NativeLocalStorageModule.setStorageItem(
       "testKey",
-      "Hello, ReactLynx!"
+      "Hello, ReactLynx!" + Math.random() * 10000
     );
     getStorage();
   };
@@ -31,68 +29,22 @@ export function App() {
     getStorage();
   }, []);
 
-  const containerStyle = {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    justifyContent: "center",
-    height: "100vh"
-  };
-
-  const contentBoxStyle = {
-    border: "1px solid #ccc",
-    padding: "2px",
-    marginBottom: "20px",
-    borderRadius: "5px",
-    width: "300px",
-    textAlign: "center"
-  };
-
-  const buttonContainerStyle = {
-    display: "flex",
-    flexDirection: "column",
-    width: "max-content"
-  };
-
-  const buttonStyle = {
-    padding: "2px",
-    margin: "5px",
-    backgroundColor: "#ec644c",
-    borderRadius: "5px",
-    fontSize: "16px",
-    boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
-    flexShrink: "0"
-  };
-
-  const textStyle = {
-    fontSize: "18px",
-    margin: "10px 0",
-    color: "#333"
-  };
-
-  const buttonTextStyle = {
-    fontSize: "18px",
-    margin: "10px 0",
-    color: "#fffffe",
-    alignSelf: "center"
-  };
-
   return (
-    <view style={containerStyle}>
-      <view style={contentBoxStyle}>
-        <text style={textStyle}>
+    <view className={"container"}>
+      <view className={"containerBox"}>
+        <text className={"containerBoxText"}>
           Current stored value: {storedValue || "None"}
         </text>
       </view>
-      <view style={buttonContainerStyle}>
-        <view style={buttonStyle} bindtap={setStorage}>
-          <text style={buttonTextStyle}>Set storage: Hello, ReactLynx!</text>
+      <view className={"buttonContainer"}>
+        <view className={"button"} bindtap={setStorage}>
+          <text className={"buttonText"}>Set storage: Hello, ReactLynx!</text>
         </view>
-        <view style={buttonStyle} bindtap={getStorage}>
-          <text style={buttonTextStyle}>Read storage</text>
+        <view className={"button"} bindtap={getStorage}>
+          <text className={"buttonText"}>Read storage</text>
         </view>
-        <view style={buttonStyle} bindtap={clearStorage}>
-          <text style={buttonTextStyle}>Clear storage</text>
+        <view className={"button"} bindtap={clearStorage}>
+          <text className={"buttonText"}>Clear storage</text>
         </view>
       </view>
     </view>

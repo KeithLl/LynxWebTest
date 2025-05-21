@@ -1,10 +1,6 @@
 import {
-  runOnBackground,
-  useCallback,
   useEffect,
   useInitData,
-  useLynxGlobalEventListener,
-  useMainThreadRef,
   useRef,
   useState
 } from "@lynx-js/react";
@@ -14,32 +10,33 @@ import medalHeadBg from "@/assets/all_medal_head_bg.png";
 import medalHeadIconBg from "@/assets/all_medal_head_icon_bg.png";
 import {
   type ListScrollEvent,
-  MainThread,
   type NodesRef
 } from "@lynx-js/types";
 import MedalItemView from "@/component/medal_item/MedalItemView.js";
 import FetchUtils from "@/api/FetchUtils.js";
 import {
   Medal,
-  type MedalResponse
+  MedalResponse
 } from "@/beans/Medal.js";
+import type { PageInitData } from "@/beans/PageInitData.js";
+import MedalItemDialog from "@/component/dialog/MedalItemDialog.js";
 
 export function App() {
 
-  const initData = useInitData();
-  console.log("initAppData", initData, initData.pageName);
+  const initData = useInitData() as PageInitData;
 
-  const [headerIcon, setHeaderIcon] = useState("");
   const [scrollTop, setScrollTop] = useState(0);// 滚动距离
 
   const [isFetching, setFetching] = useState(true);
   const [medalList, setMedalList] = useState([]);
-  const [medalResult, setMedalResult] = useState<MedalResponse>(null);
+  const [medalResult, setMedalResult] = useState<MedalResponse | null>(null);
+  const [clickedMedal, setClickedMedal] = useState<Medal | null>(null);
 
   const listRef = useRef<NodesRef>(null);
 
   useEffect(() => {
     console.info("Hello, ReactLynx");
+    console.log("initAppData", initData, initData.pageName);
 
     // 自动滚动
     // listRef.current?.invoke({
@@ -58,7 +55,7 @@ export function App() {
     try {
       const resposeData = await FetchUtils.post(initData.url, initData.params);
       console.log("resposeData", resposeData, resposeData.data);
-      setMedalResult(resposeData.data);
+      setMedalResult(new MedalResponse(resposeData.data.medalList, resposeData.data.commentH5url));
       setMedalList(resposeData.data.medalList);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -68,7 +65,11 @@ export function App() {
   };
 
   const onItemTap = (medalItem: Medal) => {
-    console.log("onItemTap", medalItem);
+    setClickedMedal(medalItem);
+  };
+
+  const handleBgClick = () => {
+    setClickedMedal(null);
   };
 
   return (
@@ -78,24 +79,23 @@ export function App() {
           <view className="header">
             <image src={medalHeadBg} className="headerBg"/>
             <image src={medalHeadIconBg} className="headerIconBg"/>
-            <image src={headerIcon} className="headerIcon"/>
+            <image src={medalResult?.wearingMedal?.activeIcon || ""}
+                   className="headerIcon"/>
             <text className="headerText">
-              快去点亮勋章吧
+              {medalResult?.wearingMedal?.name || "快去点亮勋章吧"}
             </text>
           </view>
           <view className="titleContainer">
             <text className="title">全部勋章</text>
             <text className="titleFlag">(</text>
-            <text className="titleProgress">0</text>
+            <text
+              className="titleProgress">{medalResult?.grantedCount || 0}</text>
             <text className="titleFlag">/</text>
-            <text className="titleTotal">6</text>
+            <text className="titleTotal">{medalResult?.totalCount || 0}</text>
             <text className="titleFlag">)</text>
           </view>
-          {/*<MedalItemView*/}
-          {/*  index={0}*/}
-          {/*  url={AppConsts.picUrl}*/}
-          {/*  name="全部"*/}
-          {/*></MedalItemView>*/}
+          {/*是否加载中*/}
+          {isFetching ? <text>Loading...</text> : <view></view>}
           <list
             ref={listRef}
             className="list"
@@ -136,6 +136,8 @@ export function App() {
             })}
           </list>
         </view>
+        {clickedMedal != null && <MedalItemDialog medalItem={clickedMedal}
+                                                  handleBgClick={handleBgClick}/>}
       </view>
     </view>
   );

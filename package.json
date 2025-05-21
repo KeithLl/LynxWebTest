@@ -16,6 +16,7 @@
     "@lynx-js/rspeedy": "^0.9.1",
     "@lynx-js/types": "^3.2.1",
     "@types/react": "^18.3.20",
+    "@types/react-dom": "^19.1.5",
     "typescript": "~5.8.3"
   },
   "engines": {

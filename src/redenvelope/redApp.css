@@ -1,42 +1,45 @@
-.AppContainer {
-  position: relative;
-  width: 100vw;
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 100vh;
-  overflow: hidden;
-}
 
+  .containerBox {
+    border: 1px solid #ccc;
+    padding: 2px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    width: 300px;
+    text-align: center;
 
-.RedEnvelopeWrapper {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  background-color: #f0f0f0;
-  border-radius: 50%;
-  cursor: pointer;
-}
-
-.Coin {
-  position: absolute;
-  background: yellow;
-  border-radius: 50%;
-  transition: none; /* 禁用过渡效果，让动画更流畅 */
-  animation: coin-animation 0.5s ease-out forwards;
-}
-
-/* 更加生动的动画效果 */
-@keyframes coin-animation {
-  0% {
-    opacity: 0;
-    transform: scale(0.3) rotate(-45deg);
+    .containerBoxText {
+      font-size: 18px;
+      margin: 10px 0;
+      color: #333
+    }
   }
-  60% {
-    opacity: 1;
-    transform: scale(1.1) rotate(10deg);
+
+  .buttonContainer {
+    display: flex;
+    flex-direction: column;
+    width: max-content
   }
-  100% {
-    transform: scale(1) rotate(0deg);
+}
+
+.button {
+  padding: 2px;
+  margin: 5px;
+  background-color: #ec644c;
+  border-radius: 5px;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+
+  .buttonText {
+    font-size: 18px;
+    margin: 10px 0;
+    color: #fffffe;
+    align-self: center
   }
 }
